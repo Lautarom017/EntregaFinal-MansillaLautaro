@@ -18,6 +18,74 @@ const changeFoodPosition = () => {
     foodY = Math.floor(Math.random() * 30) +1;
 }
 
+const fetchRandomBackgroundColor = async () => {
+    try {
+        const response = await fetch('https://www.thecolorapi.com/scheme?format=json&count=1');
+        if (!response.ok) {
+            throw new Error('Error al obtener el color de fondo');
+        }
+        const data = await response.json();
+        return data.colors[0].hex.value;
+    } catch (error) {
+        console.error('Error al obtener el color de fondo:', error.message);
+        return null;
+    }
+};
+
+
+
+const setBackgroundColor = async () => {
+    try {
+        const backgroundColor = await fetchRandomBackgroundColor();
+        if (backgroundColor) {
+        const snakeColorContrast = getContrastRatio(backgroundColor, 'green');
+        const foodColorContrast = getContrastRatio(backgroundColor, 'red');
+        
+        if (snakeColorContrast > 3 && foodColorContrast > 3) {
+            document.body.style.backgroundColor = backgroundColor;
+        } else {
+            setBackgroundColor();
+        }
+        } else {
+        console.error('No se pudo establecer el color de fondo');
+        }
+    } catch (error) {
+        console.error('Error al establecer el color de fondo:', error.message);
+    }
+};
+
+const getContrastRatio = (color1, color2) => {
+    const rgb1 = hexToRgb(color1);
+    const rgb2 = hexToRgb(color2);
+
+    const luminance1 = calculateLuminance(rgb1);
+    const luminance2 = calculateLuminance(rgb2);
+    const contrastRatio = (Math.max(luminance1, luminance2) + 0.05) / (Math.min(luminance1, luminance2) + 0.05);
+
+    return contrastRatio;
+};
+
+const hexToRgb = (hex) => {
+    hex = hex.replace(/^#/, '');
+    const bigint = parseInt(hex, 16);
+    const r = (bigint >> 16) & 255;
+    const g = (bigint >> 8) & 255;
+    const b = bigint & 255;
+    return [r, g, b];
+};
+
+const calculateLuminance = (rgb) => {
+    const [r, g, b] = rgb.map(component => {
+        component /= 255;
+        return component <= 0.03928 ? component / 12.92 : Math.pow((component + 0.055) / 1.055, 2.4);
+    });
+
+    return 0.2126 * r + 0.7152 * g + 0.0722 * b;
+};
+
+
+setBackgroundColor();  
+
 
 import Swal from 'sweetalert2';
 
@@ -37,10 +105,6 @@ const handleGameOver = () => {
     });
 };
 
-fetch()
-    .then(response => response.json())
-    .then(data => console.log(data))
-    .catch(error => console.error('Error fetching data:', error));
 
 const changeDirection = (e) => {
     //console.log(e);
