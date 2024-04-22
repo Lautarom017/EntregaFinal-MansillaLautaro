@@ -18,11 +18,29 @@ const changeFoodPosition = () => {
     foodY = Math.floor(Math.random() * 30) +1;
 }
 
+
+import Swal from 'sweetalert2';
+
 const handleGameOver = () => {
     clearInterval(setIntervalId);
-    alert("Has perdido ! Vuelve a intentarlo..");
-    location.reload();
-}
+    Swal.fire({
+        title: 'Game Over!',
+        text: 'Has perdido ! Vuelve a intentarlo..',
+        icon: 'error',
+        showCancelButton: false,
+        confirmButtonColor: '#3085d6',
+        confirmButtonText: 'OK'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            location.reload();
+        }
+    });
+};
+
+fetch()
+    .then(response => response.json())
+    .then(data => console.log(data))
+    .catch(error => console.error('Error fetching data:', error));
 
 const changeDirection = (e) => {
     //console.log(e);
