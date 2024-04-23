@@ -1,0 +1,12 @@
+[
+    { "id": 1, "name": "Azul", "hex": "#0074D9" },
+    { "id": 2, "name": "Verde", "hex": "#2ECC40" },
+    { "id": 3, "name": "Amarillo", "hex": "#FFDC00" },
+    { "id": 4, "name": "Morado", "hex": "#B10DC9" },
+    { "id": 5, "name": "Naranja", "hex": "#FF851B" },
+    { "id": 6, "name": "Rosa", "hex": "#FF4136" },
+    { "id": 7, "name": "Gris", "hex": "#AAAAAA" },
+    { "id": 8, "name": "Cyan", "hex": "#7FDBFF" },
+    { "id": 9, "name": "Negro", "hex": "#111111" },
+    { "id": 10, "name": "Blanco", "hex": "#FFFFFF" }
+]

@@ -50,6 +50,41 @@ const changeDirection = (e) => {
     }
 };
 
+function seleccionarColorAleatorio(colores) {
+    const indice = Math.floor(Math.random() * colores.length);
+    return colores[indice];
+}
+
+async function obtenerColores() {
+    try {
+        const response = await fetch('colores.json');
+        if (!response.ok) {
+            throw new Error('Error al obtener los colores: ' + response.status);
+        }
+        const colores = await response.json();
+        return colores;
+    } catch (error) {
+        console.error(error);
+        return [];
+    }
+}
+
+async function cambiarColorSerpiente() {
+    const colores = await obtenerColores();
+    if (colores.length > 0) {
+        const colorAleatorio = seleccionarColorAleatorio(colores);
+        console.log('Color aleatorio seleccionado para la serpiente:', colorAleatorio);
+
+        const snakeElements = document.querySelectorAll(".head");
+
+        snakeElements.forEach(snakeElement => {
+            snakeElement.style.backgroundColor = `${colorAleatorio.hex} !important`;
+        });
+    } else {
+        console.log('No se pudieron obtener los colores para la serpiente.');
+    }
+}
+
 const initGame = () => {
     if (gameOver) return handleGameOver();
     let htmlMarkup = `<div class="food" style="grid-area: ${foodY} / ${foodX}"></div>`;
@@ -88,6 +123,11 @@ const initGame = () => {
     playBoard.innerHTML = htmlMarkup;
 };
 
-document.addEventListener("keydown", changeDirection);
-changeFoodPosition();
-setIntervalId = setInterval(initGame, 125);
+async function iniciarJuego() {
+    await cambiarColorSerpiente();
+    changeFoodPosition();
+    document.addEventListener("keydown", changeDirection);
+    setIntervalId = setInterval(initGame, 125);
+}
+
+document.addEventListener('DOMContentLoaded', iniciarJuego);
