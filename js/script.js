@@ -61,27 +61,29 @@ async function obtenerColores() {
         if (!response.ok) {
             throw new Error('Error al obtener los colores: ' + response.status);
         }
-        const colores = await response.json();
-        return colores;
+        return await response.json();
     } catch (error) {
-        console.error(error);
-        return [];
+        throw new Error('Error al obtener los colores:', error);
     }
 }
 
 async function cambiarColorSerpiente() {
-    const colores = await obtenerColores();
-    if (colores.length > 0) {
-        const colorAleatorio = seleccionarColorAleatorio(colores);
-        console.log('Color aleatorio seleccionado para la serpiente:', colorAleatorio);
+    try {
+        const colores = await obtenerColores();
+        if (colores.length > 0) {
+            const colorAleatorio = seleccionarColorAleatorio(colores);
+            console.log('Color aleatorio seleccionado para la serpiente:', colorAleatorio);
 
-        const snakeElements = document.querySelectorAll(".head");
-
-        snakeElements.forEach(snakeElement => {
-            snakeElement.style.backgroundColor = `${colorAleatorio.hex} !important`;
-        });
-    } else {
-        console.log('No se pudieron obtener los colores para la serpiente.');
+            const snakeElements = document.querySelectorAll(".head");
+        
+            snakeElements.forEach(snakeElement => {
+                snakeElement.style.backgroundColor = `${colorAleatorio.hex} !important`;
+            });
+        } else {
+            console.log('No se pudieron obtener los colores para la serpiente.');
+        }
+    } catch (error) {
+        console.error('Error al obtener los colores:', error);
     }
 }
 
